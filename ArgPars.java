@@ -56,14 +56,14 @@ public class ArgPars{
 		Finds the positional arguments and adding them to the "positional_args" list.
 		*/
 		if (opt_detail[0].equals("NONE") && opt_detail[1].equals("NONE")){
-			optional_args.add(opt_detail[2]);
+			positional_args.add(opt_detail[2]);
 		}
 		/* 
 		Finds the optional arguments with positional value and adding them to the "optional_positional_args" list.
 		*/
 		if (!opt_detail[0].equals("NONE") && !opt_detail[1].equals("NONE")
 		 	&& !opt_detail[2].equals("NONE")){
-			optional_args.add(opt_detail[2]);
+			optional_positional_args.add(opt_detail[2]);
 		}		
 	}
 
@@ -87,7 +87,7 @@ public class ArgPars{
 		  -h, --help  show this help message and exit
 		  --log LOG   the file where the sum should be written
 	*/
-		  System.out.println(1);
+		System.out.println(1);
 	}
 
 	public void result(){
