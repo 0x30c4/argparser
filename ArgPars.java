@@ -120,7 +120,6 @@ public class ArgPars{
 		}
 		return q == 1 ? true : false;
 	}
-
 	/**@param arg It will be checked if it's a supported data type.
 	*@return True if the given parameter is a supported data type.False if it's not.
 	*/
@@ -161,8 +160,9 @@ public class ArgPars{
 		boolean invalid_arg_err_sort = false;
 		boolean invalid_arg_err_long = false;
 		boolean need_arg_err_value = false;
+		char tmp;
 		int ii;
-
+		int iii;
 		for ( int i = 0; i != this.args.size() ; i++ ) {
 			arg = this.args.get(i);
 			try{
@@ -181,32 +181,72 @@ public class ArgPars{
 						// System.out.println(this.args.size() > i + 1 && !this.args.get(i + 1).startsWith("-"));
 					}
 				}else if (arg.startsWith("-") && arg.charAt(1) != '-') {
-					// this._args.get(i).substring(0, 2);
-					System.out.println(arg);
-
+					if (this.checkIfMatch(arg.substring(0, 2), this.opt_pos_short)){
+						ii = this.opt_pos_short.indexOf(arg.substring(0, 2));
+						this.optional_arg_value.put(this.opt_pos_long_name.get(ii), arg.substring(2, arg.length()));
+						if (need_arg_err_value)
+							need_arg_err_value = false;
+						// System.out.println(arg.substring(2, arg.length()));
+					}else {
+						for (char c: arg.toCharArray()) {
+							for (String cc: this.no_val_short_char) {
+								if (cc.indexOf(c) != -1){
+									ii = this.no_val_short_char.indexOf(cc);
+									this.optional_arg.put(this.no_val_short_char.get(ii), true);
+									// System.out.println(c);
+								}else {
+									invalid_arg_err_sort = true;
+								}
+							}
+							// finding the optonal positional arguments 
+							for (String cc: this.opt_pos_short_char) {
+								if (cc.indexOf(c) != -1){
+									ii = this.opt_pos_short_char.indexOf(cc);										
+									if (arg.length() - arg.indexOf(c) - 1 == 0 && 
+										this.args.size()  > i + 1 && 
+									 	!this.args.get(i + 1).startsWith("-")){
+										this.optional_arg_value.
+											put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
+										if (need_arg_err_value)
+											need_arg_err_value = false;
+									}else {
+										iii = arg.indexOf(c) + 1;
+										this.optional_arg_value.
+											put(this.opt_pos_long_name.get(ii), 
+												arg.substring(iii, arg.length()));
+										if (need_arg_err_value)
+											need_arg_err_value = false;											
+										// System.out.println(arg.length() - arg.indexOf(c) - 1);
+										// System.out.println(arg.indexOf(c));
+									}
+									if (arg.length() - arg.indexOf(c) - 1 == 0 && 
+										!(this.args.size()  > i + 1) && 
+									 	this.args.get(i + 1).startsWith("-")){
+										need_arg_err_value = true;
+									}
+									if (invalid_arg_err_sort)
+										invalid_arg_err_sort = false;
+								}else {
+									invalid_arg_err_sort = true;									
+								}
+							}
+						}
+					}
 				}
-			}catch (Exception e){
-				// System.out.println(e);
-			}
 
-				// else if (this.args.get(i).length() > 2) {
-				// 	for (char aa: this.args.get(i).toCharArray()) { //this.args.get(i).toCharArray()
-				// 		// if (this.args.get(i).indexOf(aa) != -1) {
-				// 		// 	ii = this.no_val_short_char.indexOf(aa);
-				// 		// 	this.optional_arg.put(this.no_val_short_char.get(ii), true);
-				// 		// 	// System.out.println(this.args.get(i).indexOf(aa));				
-				// 		// }else{
-				// 		// 	invalid_arg_err_sort = true;
-				// 		// }
-				// 			System.out.println(aa);
-				// 	}
-				// }else {
-				// 	invalid_arg_err_sort = true;
-				// }
+			}catch (Exception e){
+				System.out.println(e);
+			}
+			System.out.print(invalid_arg_err_sort);
+			System.out.print("+");
+			System.out.print(invalid_arg_err_long);
+			System.out.print("+");
+			System.out.print(need_arg_err_value);
+			System.out.print("+\n");
 		}
 	}
 
-	public void create_help_menu(){
+	// public void create_help_menu(){
 	/*
 		usage: t [-h] [--log LOG] int [int ...]
 
@@ -219,8 +259,8 @@ public class ArgPars{
 		  -h, --help  show this help message and exit
 		  --log LOG   the file where the sum should be written
 	*/
-		System.out.println(1);
-	}
+		// System.out.println(1);
+	// }
 
 	// public void result(){
 	// 	// Java Program explaining util.Dictionary class Methods 
