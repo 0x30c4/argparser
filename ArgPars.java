@@ -179,6 +179,8 @@ public class ArgPars{
 							need_arg_err_value = true;
 						}
 						// System.out.println(this.args.size() > i + 1 && !this.args.get(i + 1).startsWith("-"));
+					}else {
+						invalid_arg_err_sort = true;
 					}
 				}else if (arg.startsWith("-") && arg.charAt(1) != '-') {
 					if (this.checkIfMatch(arg.substring(0, 2), this.opt_pos_short)){
@@ -193,6 +195,8 @@ public class ArgPars{
 								if (cc.indexOf(c) != -1){
 									ii = this.no_val_short_char.indexOf(cc);
 									this.optional_arg.put(this.no_val_short_char.get(ii), true);
+									if (invalid_arg_err_sort)
+										invalid_arg_err_sort = false;
 									// System.out.println(c);
 								}else {
 									invalid_arg_err_sort = true;
@@ -209,13 +213,17 @@ public class ArgPars{
 											put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
 										if (need_arg_err_value)
 											need_arg_err_value = false;
+										if (invalid_arg_err_sort)
+											invalid_arg_err_sort = false;
 									}else {
 										iii = arg.indexOf(c) + 1;
 										this.optional_arg_value.
 											put(this.opt_pos_long_name.get(ii), 
 												arg.substring(iii, arg.length()));
 										if (need_arg_err_value)
-											need_arg_err_value = false;											
+											need_arg_err_value = false;
+										if (invalid_arg_err_sort)
+											invalid_arg_err_sort = false;																			
 										// System.out.println(arg.length() - arg.indexOf(c) - 1);
 										// System.out.println(arg.indexOf(c));
 									}
@@ -224,10 +232,9 @@ public class ArgPars{
 									 	this.args.get(i + 1).startsWith("-")){
 										need_arg_err_value = true;
 									}
-									if (invalid_arg_err_sort)
-										invalid_arg_err_sort = false;
-								}else {
-									invalid_arg_err_sort = true;									
+								}else if (!arg.startsWith("-")){
+									invalid_arg_err_sort = true;
+									System.out.print("+");
 								}
 							}
 						}
