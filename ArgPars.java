@@ -16,11 +16,19 @@ public class ArgPars{
 
 	public Hashtable<String, Boolean> optional_arg = new Hashtable<String, Boolean>(); 
 	public Hashtable<String, String> optional_arg_value = new Hashtable<String, String>(); 
+	public Hashtable<String, String> positional_argument = new Hashtable<String, String>(); 
 
-	public ArgPars(String[] aa){
+	public String helpMenu;
+	public String programName;
+	public String programDescription;
+
+	public ArgPars(String[] aa, String programName, String programDescription){
 		for (String i: aa) {
 			this.args.add(i);
 		}
+		this.programName =  programName;
+		this.programDescription =  programDescription;
+		this.helpMenu = "Usage: " + programName + " [-h]";
 	}
 
 	/** 
@@ -74,8 +82,9 @@ public class ArgPars{
 		}
 
 		// Checking for duplicate
-		if (this.checkIfMatch(short_opt, opt_pos_short) || this.checkIfMatch(long_opt, this.opt_pos_long) ||
-			this.checkIfMatch(value, positional_arg) || this.checkIfMatch(short_opt, no_val_short)){
+		if (this.checkIfMatch(short_opt, this.opt_pos_short) || this.checkIfMatch(long_opt, this.opt_pos_long) ||
+			this.checkIfMatch(value, this.positional_arg) || this.checkIfMatch(short_opt, this.no_val_short) ||
+			this.checkIfMatch(value, this.opt_pos_long_name)){
 			System.out.println("Error [Duplicate found]: Can't use same things twice.");
 			System.out.println(short_opt + ", " + long_opt + ", " + value + ", " + value_type + ", " + help_str);
 			System.exit(0);
@@ -87,6 +96,7 @@ public class ArgPars{
 		if (!this.checkIfNone(short_opt) && this.checkIfNone(long_opt)){
 			this.no_val_short.add(short_opt);
 			this.no_val_short_char.add(short_opt.substring(1));
+			this.helpMenu
 		}
 
 		/* 
@@ -159,10 +169,12 @@ public class ArgPars{
 		String arg;
 		boolean invalid_arg_err_sort = false;
 		boolean invalid_arg_err_long = false;
-		boolean need_arg_err_value = false;
+		boolean need_arg_err_value_short = false;
+		boolean need_arg_err_value_long = false;
+		boolean need_positional_arg = false;
+		boolean invalid_positional_arg_err = false;
 		char tmp;
-		int ii;
-		int iii;
+		int ii, iii, pc = 0;
 		for ( int i = 0; i != this.args.size() ; i++ ) {
 			arg = this.args.get(i);
 			try{
@@ -176,7 +188,7 @@ public class ArgPars{
 							ii = this.opt_pos_short.indexOf(arg);
 							this.optional_arg_value.put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
 						}else {
-							need_arg_err_value = true;
+							need_arg_err_value_short = true;
 						}
 						// System.out.println(this.args.size() > i + 1 && !this.args.get(i + 1).startsWith("-"));
 					}else {
@@ -186,8 +198,8 @@ public class ArgPars{
 					if (this.checkIfMatch(arg.substring(0, 2), this.opt_pos_short)){
 						ii = this.opt_pos_short.indexOf(arg.substring(0, 2));
 						this.optional_arg_value.put(this.opt_pos_long_name.get(ii), arg.substring(2, arg.length()));
-						if (need_arg_err_value)
-							need_arg_err_value = false;
+						if (need_arg_err_value_short)
+							need_arg_err_value_short = false;
 						// System.out.println(arg.substring(2, arg.length()));
 					}else {
 						for (char c: arg.toCharArray()) {
@@ -211,8 +223,8 @@ public class ArgPars{
 									 	!this.args.get(i + 1).startsWith("-")){
 										this.optional_arg_value.
 											put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
-										if (need_arg_err_value)
-											need_arg_err_value = false;
+										if (need_arg_err_value_short)
+											need_arg_err_value_short = false;
 										if (invalid_arg_err_sort)
 											invalid_arg_err_sort = false;
 									}else {
@@ -220,8 +232,8 @@ public class ArgPars{
 										this.optional_arg_value.
 											put(this.opt_pos_long_name.get(ii), 
 												arg.substring(iii, arg.length()));
-										if (need_arg_err_value)
-											need_arg_err_value = false;
+										if (need_arg_err_value_short)
+											need_arg_err_value_short = false;
 										if (invalid_arg_err_sort)
 											invalid_arg_err_sort = false;																			
 										// System.out.println(arg.length() - arg.indexOf(c) - 1);
@@ -230,7 +242,7 @@ public class ArgPars{
 									if (arg.length() - arg.indexOf(c) - 1 == 0 && 
 										!(this.args.size()  > i + 1) && 
 									 	this.args.get(i + 1).startsWith("-")){
-										need_arg_err_value = true;
+										need_arg_err_value_short = true;
 									}
 								}else if (!arg.startsWith("-")){
 									invalid_arg_err_sort = true;
@@ -239,23 +251,64 @@ public class ArgPars{
 							}
 						}
 					}
+				}else if (arg.startsWith("-") && arg.charAt(1) == '-') {
+				// finding the long options.				
+					if (this.checkIfMatch(arg, this.opt_pos_long)){
+						if (this.args.size() > i + 1){
+							ii = this.opt_pos_long.indexOf(arg);
+							this.optional_arg_value.put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
+							if (invalid_arg_err_long)
+								invalid_arg_err_long = false;
+						}else {
+							need_arg_err_value_long = true;
+							System.out.println("Need an argument");
+						}
+					}else {
+						for (String ls: this.opt_pos_long) {
+							try {
+								if (arg.charAt(ls.length()) == '=' &&
+								 	arg.substring(0, ls.length()).equals(ls)) {
+									ii = this.opt_pos_long.indexOf(ls);
+									this.optional_arg_value.put(this.opt_pos_long_name.get(ii), 
+										arg.substring(ls.length() + 1, arg.length()));
+									if (invalid_arg_err_long)
+										invalid_arg_err_long = false;
+								}else {
+									invalid_arg_err_long = true;
+								}
+							}catch (StringIndexOutOfBoundsException e){
+								invalid_arg_err_long = true;
+								System.out.println(e);
+							}
+						}
+					}
+				}else if (!arg.startsWith("-")) {
+				// finding the positional arguments					
+					if (this.positional_arg.size() != pc && !this.args.get(i - 1).startsWith("-")){
+						this.positional_argument.put(this.positional_arg.get(pc), arg);
+						pc++;
+					}else if (!this.args.get(i - 1).startsWith("-")){
+						invalid_positional_arg_err = true;
+					}
 				}
-
 			}catch (Exception e){
 				System.out.println(e);
 			}
-			System.out.print(invalid_arg_err_sort);
-			System.out.print("+");
-			System.out.print(invalid_arg_err_long);
-			System.out.print("+");
-			System.out.print(need_arg_err_value);
-			System.out.print("+\n");
+			if (invalid_arg_err_sort || invalid_arg_err_long ||
+				need_arg_err_value_short || need_arg_err_value_long ||
+				invalid_positional_arg_err || need_positional_arg){
+				System.out.println(invalid_arg_err_sort + " " + invalid_arg_err_long
+					 + " " + need_arg_err_value_short + " " + need_arg_err_value_long
+					 + " " + need_positional_arg + " " + invalid_positional_arg_err);
+			}
 		}
 	}
 
-	// public void create_help_menu(){
+	/** This method creates the help menu for the program
+	*/
+	public void createHelpMenu(){
 	/*
-		usage: t [-h] [--log LOG] int [int ...]
+		Usage: t [-h] [--log LOG] int [int ...]
 
 		sum the integers at the command line
 
@@ -266,9 +319,21 @@ public class ArgPars{
 		  -h, --help  show this help message and exit
 		  --log LOG   the file where the sum should be written
 	*/
-		// System.out.println(1);
+		System.out.println(this.helpMenu);
+	}
+
+	// /** this method parse the value from string
+	// */
+	// public void parseValue(){
+
 	// }
 
+	/*
+	int decimalExample = Integer.valueOf("20"); 
+	float f = Float.parseFloat(decimal);
+	double d = Double.parseDouble(str)
+	e.getMessage()
+	*/
 	// public void result(){
 	// 	// Java Program explaining util.Dictionary class Methods 
 	// 	// put(), elements(), get(), isEmpty(), keys() 
