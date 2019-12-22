@@ -203,6 +203,7 @@ public class ArgPars{
 			try{	
 			// Finding all the short optional options whether they consist any positional argument or not.
 				if (arg.startsWith("-") && arg.charAt(1) != '-' && arg.length() == 2){
+
 					if (this.checkIfMatch(arg, this.no_val_short)){
 						ii = this.no_val_short.indexOf(arg);
 						this.optional_arg.put(this.no_val_short_char.get(ii), true);
@@ -258,7 +259,7 @@ public class ArgPars{
 										if (need_arg_err_value_short)
 											need_arg_err_value_short = false;
 										if (invalid_arg_err_sort)
-											invalid_arg_err_sort = false;																			
+											invalid_arg_err_sort = false;																		
 										// System.out.println(arg.length() - arg.indexOf(c) - 1);
 										// System.out.println(arg.indexOf(c));
 									}
@@ -269,7 +270,6 @@ public class ArgPars{
 									}
 								}else if (!arg.startsWith("-")){
 									invalid_arg_err_sort = true;
-									System.out.print("+");
 								}
 							}
 						}
@@ -305,40 +305,40 @@ public class ArgPars{
 						}
 					}
 				}else if (!arg.startsWith("-")) {
-				// finding the positional arguments					
-					if (this.positional_arg.size() != pc && !this.args.get(i - 1).startsWith("-")){
+				// finding the positional arguments
+					try	{
+						if (this.positional_arg.size() != pc && !this.args.get(i - 1).startsWith("-")){
+							this.positional_argument.put(this.positional_arg.get(pc), arg);
+							pc++;
+						}
+					}catch (IndexOutOfBoundsException e){
 						this.positional_argument.put(this.positional_arg.get(pc), arg);
 						pc++;
 					}
 				}
 
 			}catch (Exception e){
-				// System.out.println(e);
+				System.out.println(e);
 			}
-
-			if (invalid_arg_err_long || invalid_arg_err_sort){
-				error_txt = String.format(
-							"%s: invalid option -- '%s'\nTry '%s --help' for more information.",
-							this.programName, arg, this.programName
-							);
-				System.out.println(error_txt);
-				System.exit(0);
-			}
-			else if (need_arg_err_value_short || need_arg_err_value_long){
-				error_txt = String.format(
-							"%s: option requires an argument -- '%s'\nTry '%s --help' for more information.",
-							this.programName, arg, this.programName
-							);
-				System.out.println(error_txt);
-				System.exit(0);
-			}else if (invalid_positional_arg_err){
-				error_txt = String.format(
-							"%s: invalid positional argument '%s'\nTry '%s --help' for more information.",
-							this.programName, arg, this.programName
-							);
-				System.out.println(error_txt);
-				System.exit(0);
-			}
+		
+			// if (invalid_arg_err_long || invalid_arg_err_sort){
+			// 	System.out.println(invalid_arg_err_sort);
+			// 	System.out.println(invalid_arg_err_long);
+			// 	error_txt = String.format(
+			// 				"%s: invalid option -- '%s'\nTry '%s --help' for more information.",
+			// 				this.programName, arg, this.programName
+			// 				);
+			// 	System.out.println(error_txt);
+			// 	System.exit(0);
+			// }
+			// else if (need_arg_err_value_short || need_arg_err_value_long){
+			// 	error_txt = String.format(
+			// 				"%s: option requires an argument -- '%s'\nTry '%s --help' for more information.",
+			// 				this.programName, arg, this.programName
+			// 				);
+			// 	System.out.println(error_txt);
+			// 	System.exit(0);
+			// }
 		}
 		ii = 0;
 		iii = this.positional_arg.size();
@@ -349,14 +349,21 @@ public class ArgPars{
 			}
 		}
 
-		if ((ii - pc) != iii){
-			error_txt = String.format(
-						"%s: positional arguments are required\nTry '%s --help' for more information.",
-						this.programName, this.programName
-						);
-			System.out.println(error_txt);
-			System.exit(0);			
-		}
+		// if ((ii - pc) < iii){
+		// 	error_txt = String.format(
+		// 				"%s: positional arguments are required\nTry '%s --help' for more information.",
+		// 				this.programName, this.programName
+		// 				);
+		// 	System.out.println(error_txt);
+		// 	System.exit(0);			
+		// }else if (ii - pc > iii) {
+		// 	error_txt = String.format(
+		// 				"%s: invalid positional argument \nTry '%s --help' for more information.",
+		// 				this.programName, this.programName
+		// 				);
+		// 	System.out.println(error_txt);
+		// 	System.exit(0);
+		// }
 
 		if (this.args.size() == 0) {
 			error_txt = String.format( 
