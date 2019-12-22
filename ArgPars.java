@@ -189,7 +189,6 @@ public class ArgPars{
 		boolean invalid_arg_err_long = false;
 		boolean need_arg_err_value_short = false;
 		boolean need_arg_err_value_long = false;
-		boolean need_positional_arg = false;
 		boolean invalid_positional_arg_err = false;
 		char tmp;
 		int ii, iii, error ,pc = 0;
@@ -310,12 +309,11 @@ public class ArgPars{
 					if (this.positional_arg.size() != pc && !this.args.get(i - 1).startsWith("-")){
 						this.positional_argument.put(this.positional_arg.get(pc), arg);
 						pc++;
-					}else if (!this.args.get(i - 1).startsWith("-")){
-						invalid_positional_arg_err = true;
 					}
 				}
+
 			}catch (Exception e){
-				System.out.println(e);
+				// System.out.println(e);
 			}
 
 			if (invalid_arg_err_long || invalid_arg_err_sort){
@@ -341,15 +339,25 @@ public class ArgPars{
 				System.out.println(error_txt);
 				System.exit(0);
 			}
-			else if (need_positional_arg){
-				error_txt = String.format(
-							"%s: positional arguments are required\nTry '%s --help' for more information.",
-							this.programName, this.programName
-							);
-				System.out.println(error_txt);
-				System.exit(0);
+		}
+		ii = 0;
+		iii = this.positional_arg.size();
+		pc = this.optional_arg_value.size();
+		for (String q: this.args){
+			if (!q.startsWith("-")){
+				ii++;
 			}
 		}
+
+		if ((ii - pc) != iii){
+			error_txt = String.format(
+						"%s: positional arguments are required\nTry '%s --help' for more information.",
+						this.programName, this.programName
+						);
+			System.out.println(error_txt);
+			System.exit(0);			
+		}
+
 		if (this.args.size() == 0) {
 			error_txt = String.format( 
 				"Usage: %s  [OPTION]... <ARGUMENTS>...\nTry '%s --help' for more information.",
@@ -358,7 +366,6 @@ public class ArgPars{
 			System.out.println(error_txt);
 			System.exit(0);
 		}
-
 		if (this.optional_arg.get("h") != null){
 			showHelpMenu();
 		}
