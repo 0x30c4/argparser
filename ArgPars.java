@@ -36,7 +36,7 @@ public class ArgPars{
 		this.programUsage = "Usage: " + programName + " [OPTION]... <ARGUMENTS>...\n";
 		this.helpPositionalArg = "positional arguments:\n  ";
 		this.helpOptionalArg = "optional arguments:\n  ";
-		this.AddOpt("-h", "NONE", "NONE", "NONE", "help menue!!");
+		
 	}
 
 	/** 
@@ -182,6 +182,7 @@ public class ArgPars{
 
 	//This method parse the argument's that user gave
 	public void parse_arg(){
+		this.AddOpt("-h", "NONE", "NONE", "NONE", "To show this text");
 		String arg;
 		String error_txt;
 		boolean invalid_arg_err_sort = false;
@@ -284,7 +285,6 @@ public class ArgPars{
 								invalid_arg_err_long = false;
 						}else {
 							need_arg_err_value_long = true;
-							System.out.println("Need an argument");
 						}
 					}else {
 						for (String ls: this.opt_pos_long) {
