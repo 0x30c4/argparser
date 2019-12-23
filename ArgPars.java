@@ -181,7 +181,7 @@ public class ArgPars{
 	}
 
 	//This method parse the argument's that user gave
-	public void parse_arg(){
+	public void parseArg(){
 		this.AddOpt("-h", "NONE", "NONE", "NONE", "To show this text");
 		String arg;
 		String error_txt;
@@ -320,7 +320,9 @@ public class ArgPars{
 			}catch (Exception e){
 				System.out.println(e);
 			}
-		
+
+			System.out.println(invalid_arg_err_long + " " + invalid_arg_err_sort + " "  + need_arg_err_value_short + " " + need_arg_err_value_long + " " + need_arg_err_value_short + " " + need_arg_err_value_long);
+
 			// if (invalid_arg_err_long || invalid_arg_err_sort){
 			// 	System.out.println(invalid_arg_err_sort);
 			// 	System.out.println(invalid_arg_err_long);
