@@ -214,9 +214,10 @@ public class ArgPars{
 						}else {
 							need_arg_err_value_short = true;
 						}
-						// System.out.println(this.args.size() > i + 1 && !this.args.get(i + 1).startsWith("-"));
 					}else {
 						invalid_arg_err_sort = true;
+				// System.out.println(1);
+						
 					}
 				}else if (arg.startsWith("-") && arg.charAt(1) != '-') {
 					if (this.checkIfMatch(arg.substring(0, 2), this.opt_pos_short)){
@@ -236,6 +237,7 @@ public class ArgPars{
 									// System.out.println(c);
 								}else {
 									invalid_arg_err_sort = true;
+				// System.out.println(1);
 								}
 							}
 							// finding the optonal positional arguments 
@@ -270,6 +272,8 @@ public class ArgPars{
 									}
 								}else if (!arg.startsWith("-")){
 									invalid_arg_err_sort = true;
+				System.out.println(1);
+
 								}
 							}
 						}
@@ -321,7 +325,9 @@ public class ArgPars{
 				System.out.println(e);
 			}
 
-			System.out.println(invalid_arg_err_long + " " + invalid_arg_err_sort + " "  + need_arg_err_value_short + " " + need_arg_err_value_long + " " + need_arg_err_value_short + " " + need_arg_err_value_long);
+			System.out.println(invalid_arg_err_long + " " + invalid_arg_err_sort +
+			 " "  + need_arg_err_value_short + " " + need_arg_err_value_long +
+			  " " + need_arg_err_value_short + " " + need_arg_err_value_long);
 
 			// if (invalid_arg_err_long || invalid_arg_err_sort){
 			// 	System.out.println(invalid_arg_err_sort);
