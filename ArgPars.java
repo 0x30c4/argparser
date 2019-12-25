@@ -217,7 +217,7 @@ public class ArgPars{
 					}else {
 						invalid_arg_err_sort = true;
 				// System.out.println(1);
-						
+
 					}
 				}else if (arg.startsWith("-") && arg.charAt(1) != '-') {
 					if (this.checkIfMatch(arg.substring(0, 2), this.opt_pos_short)){
@@ -234,10 +234,11 @@ public class ArgPars{
 									this.optional_arg.put(this.no_val_short_char.get(ii), true);
 									if (invalid_arg_err_sort)
 										invalid_arg_err_sort = false;
-									// System.out.println(c);
 								}else {
 									invalid_arg_err_sort = true;
-				// System.out.println(1);
+									// System.out.println(c + " " + cc);
+									System.out.println(arg.indexOf(c) + " " + c);
+									// System.out.println(1);
 								}
 							}
 							// finding the optonal positional arguments 
@@ -249,21 +250,23 @@ public class ArgPars{
 									 	!this.args.get(i + 1).startsWith("-")){
 										this.optional_arg_value.
 											put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
-										if (need_arg_err_value_short)
+										if (need_arg_err_value_short){
 											need_arg_err_value_short = false;
-										if (invalid_arg_err_sort)
+										}
+										if (invalid_arg_err_sort){
 											invalid_arg_err_sort = false;
+										}
 									}else {
 										iii = arg.indexOf(c) + 1;
 										this.optional_arg_value.
 											put(this.opt_pos_long_name.get(ii), 
 												arg.substring(iii, arg.length()));
-										if (need_arg_err_value_short)
+										if (need_arg_err_value_short){
 											need_arg_err_value_short = false;
-										if (invalid_arg_err_sort)
-											invalid_arg_err_sort = false;																		
-										// System.out.println(arg.length() - arg.indexOf(c) - 1);
-										// System.out.println(arg.indexOf(c));
+										}
+										if (invalid_arg_err_sort){
+											invalid_arg_err_sort = false;
+										}
 									}
 									if (arg.length() - arg.indexOf(c) - 1 == 0 && 
 										!(this.args.size()  > i + 1) && 
@@ -272,8 +275,6 @@ public class ArgPars{
 									}
 								}else if (!arg.startsWith("-")){
 									invalid_arg_err_sort = true;
-				System.out.println(1);
-
 								}
 							}
 						}
