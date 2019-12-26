@@ -2,8 +2,9 @@ import java.util.*;
 
 public class Root{
 	public static void main(String[] args) {
-		
+
 		// creating an object.
+		
 		// the 1st parameter is the "args" that user supply's.
 		// 2nd is the program name.
 		// 3rd is the program description.
