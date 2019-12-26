@@ -1,4 +1,4 @@
-public class Main{
+public class Example{
 	public static void main(String[] args) {
 		// Creating an object.
 
