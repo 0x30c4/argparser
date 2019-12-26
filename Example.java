@@ -1,7 +1,7 @@
 public class Example{
 	public static void main(String[] args) {
 		// Creating an object.
-
+		
 		// The 1st parameter is the "args" that user supply's.
 		// 2nd is the program name.
 		// 3rd is the program description.
