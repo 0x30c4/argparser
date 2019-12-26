@@ -1,10 +1,7 @@
-import java.util.*;
-
-public class Root{
+public class Main{
 	public static void main(String[] args) {
-
 		// creating an object.
-		
+
 		// the 1st parameter is the "args" that user supply's.
 		// 2nd is the program name.
 		// 3rd is the program description.
@@ -12,17 +9,15 @@ public class Root{
 		
 		// Adding the cli options.
 
-		// the options that have argument.
+		// Defing the options that have argument.
 		a.AddOpt("-i", "--ip-addr", "ip_addr", "str","help menue!!");
 		a.AddOpt("-p", "--port", "port", "int","help menue!!");
 		
-		// the positional arguments.
+		// Defing the positional arguments.
 		a.AddOpt("NONE", "NONE", "file", "str","help menue!!");
-		a.AddOpt("NONE", "NONE", "path", "str","help menue!!");
 		
-		// the optional options
-		a.AddOpt("-a", "NONE", "NONE", "NONE", "help menue!!");
-		a.AddOpt("-e", "NONE", "NONE", "NONE", "help menue!!");
+		// Defing the optional options
+		a.AddOpt("-q", "NONE", "NONE", "NONE", "help menue!!");
 		
 		// parsing the arguments that user gave.
 		a.parseArg();
@@ -32,18 +27,19 @@ public class Root{
 		// if there is any defined optional options then the "optional_arg" Hashtable will 
 		// store a "true" value for that option like the example.Else that will store a "null".
 		// Now it's up to you how would you use it.
-		System.out.println(a.optional_arg.get("a"));
-		System.out.println(a.optional_arg.get("e"));
+		if (a.optional_arg.get("q") != null)
+			System.out.println("The [q] option is used.");
 		
 		// if there is any defined optional long option then the "optional_arg_value" Hashtable will 
 		// store the argument value for that option like the example.Else that will store a "null".
-		System.out.println(a.optional_arg_value.get("ip_addr"));
-		System.out.println(a.optional_arg_value.get("port"));
+		if (a.optional_arg_value.get("ip_addr") != null)
+			System.out.println("The ip is : " + a.optional_arg_value.get("ip_addr"));
+		
+		if (a.optional_arg_value.get("port") != null)
+			System.out.println("The port number is : " + a.optional_arg_value.get("port"));
 
 		// this are the positional argument.When the program will run user must put those.
-		System.out.println(a.positional_argument.get("file"));
-		System.out.println(a.positional_argument.get("path"));
-
+		if (a.positional_argument.get("file") != null)
+			System.out.println("The file name is : " + a.positional_argument.get("file"));
 	}
-
 }

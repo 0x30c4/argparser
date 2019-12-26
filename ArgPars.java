@@ -221,7 +221,6 @@ public class ArgPars{
 						}
 					}else {
 						invalid_arg_err_sort = true;
-				// System.out.println(1);
 
 					}
 				}else if (arg.startsWith("-") && arg.charAt(1) != '-') {
@@ -230,7 +229,6 @@ public class ArgPars{
 						this.optional_arg_value.put(this.opt_pos_long_name.get(ii), arg.substring(2, arg.length()));
 						if (need_arg_err_value_short)
 							need_arg_err_value_short = false;
-						// System.out.println(arg.substring(2, arg.length()));
 					}else {
 						for (char c: arg.toCharArray()) {
 							for (String cc: this.no_val_short_char) {
@@ -239,11 +237,9 @@ public class ArgPars{
 									this.optional_arg.put(this.no_val_short_char.get(ii), true);
 									if (invalid_arg_err_sort)
 										invalid_arg_err_sort = false;
-									// System.out.println(this.no_val_short_char.get(ii));
 								}else {
 									if (l)
 										invalid_arg_err_sort = true;
-										// System.out.println(arg.indexOf(c));
 								}
 							}
 							// finding the optonal positional arguments 
@@ -372,8 +368,10 @@ public class ArgPars{
 						this.programName, this.programName
 						);
 			System.out.println(error_txt);
-			System.exit(0);			
-		}else if (ii - pc > iii) {
+			System.exit(0);
+
+		}
+		if ((ii - pc - 1) > iii) {
 			error_txt = String.format(
 						"%s: invalid positional argument \nTry '%s --help' for more information.",
 						this.programName, this.programName
@@ -382,7 +380,7 @@ public class ArgPars{
 			System.exit(0);
 		}
 
-		if (this.args.size() == 0) {
+		if (this.args.size() == 0 && this.positional_arg.size() != 0) {
 			error_txt = String.format( 
 				"Usage: %s  [OPTION]... <ARGUMENTS>...\nTry '%s --help' for more information.",
 				this.programName, this.programName
@@ -406,22 +404,4 @@ public class ArgPars{
 		System.exit(0);
 	}
 
-	// /** this method parse the value from string
-	// */
-	// public void parseValue(){
-
-	// }
-
-	/*
-	int decimalExample = Integer.valueOf("20"); 
-	float f = Float.parseFloat(decimal);
-	double d = Double.parseDouble(str)
-	e.getMessage()
-	*/
-	// public void result(){
-	// 	// Java Program explaining util.Dictionary class Methods 
-	// 	// put(), elements(), get(), isEmpty(), keys() 
-	// 	// remove(), size()
-	// 	System.out.println(arg_cmp);
-	// }
 }
