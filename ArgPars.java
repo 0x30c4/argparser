@@ -24,8 +24,6 @@ public class ArgPars{
 	public String programDescription;
 	public String helpPositionalArg;
 	public String helpOptionalArg;
-	public String gap;
-	public int tmp;
 
 	public ArgPars(String[] aa, String programName, String programDescription){
 		for (String i: aa) {
@@ -58,8 +56,8 @@ public class ArgPars{
 						String long_opt, String value, 
 						String value_type, String help_str){
 
-		this.tmp = 0;
-		this.gap = " ";
+		int tmp = 0;
+		String gap = " ";
 		// Error check.
 		if (!short_opt.startsWith("-") && short_opt.length() != 2 && 
 				!this.checkIfNone(value) && !this.checkIfNone(value_type) &&
@@ -106,7 +104,7 @@ public class ArgPars{
 		if (!this.checkIfNone(short_opt) && this.checkIfNone(long_opt)){
 			this.no_val_short.add(short_opt);
 			this.no_val_short_char.add(short_opt.substring(1));
-			this.helpOptionalArg += String.format("%s%25s%s\n  ",short_opt, this.gap, help_str);
+			this.helpOptionalArg += String.format("%s%25s%s\n  ",short_opt, gap, help_str);
 		}
 
 		/* 
@@ -117,11 +115,11 @@ public class ArgPars{
 			this.opt_pos_short_char.add(short_opt.substring(1));
 			this.opt_pos_long.add(long_opt);
 			this.opt_pos_long_name.add(value);
-			this.tmp = 22 - String.format("%s=%s", long_opt, value).length();
-			for (int i = 0; i != this.tmp; i++) {
-				this.gap += " ";
+			tmp = 22 - String.format("%s=%s", long_opt, value).length();
+			for (int i = 0; i != tmp; i++) {
+				gap += " ";
 			}
-			this.helpOptionalArg += String.format("%s, %s=%s%s%s\n  ",short_opt ,long_opt, value, this.gap, help_str);
+			this.helpOptionalArg += String.format("%s, %s=%s%s%s\n  ",short_opt ,long_opt, value, gap, help_str);
 		}
 
 		/* 
@@ -130,7 +128,11 @@ public class ArgPars{
 		if (!this.checkIfNone(value) && this.checkIfNone(long_opt) &&
 			this.checkIfNone(short_opt)){
 			this.positional_arg.add(value);
-			this.helpPositionalArg += String.format("%s%23s%s\n  ",value, this.gap, help_str);
+			tmp = 26 - value.length();
+			for (int i = 0; i != tmp; i++) {
+				gap += " ";
+			}			
+			this.helpPositionalArg += String.format("%s%s%s\n  ",value, gap, help_str);
 		}
 	}
 
@@ -182,7 +184,7 @@ public class ArgPars{
 
 	//This method parse the argument's that user gave
 	public void parseArg(){
-		this.AddOpt("-h", "NONE", "NONE", "NONE", "To show this text");
+		this.AddOpt("-h", "NONE", "NONE", "NONE", "To show this text.");
 		String arg;
 		String error_txt;
 		boolean invalid_arg_err_sort = false;
@@ -331,53 +333,54 @@ public class ArgPars{
 				System.out.println(e);
 			}
 
-			System.out.println(invalid_arg_err_long + " " + invalid_arg_err_sort +
-			 " "  + need_arg_err_value_short + " " + need_arg_err_value_long +
-			  " " + need_arg_err_value_short + " " + need_arg_err_value_long);
+			// System.out.println(invalid_arg_err_long + " " + invalid_arg_err_sort +
+			//  " "  + need_arg_err_value_short + " " + need_arg_err_value_long +
+			//   " " + need_arg_err_value_short + " " + need_arg_err_value_long);
 
-			// if (invalid_arg_err_long || invalid_arg_err_sort){
-			// 	System.out.println(invalid_arg_err_sort);
-			// 	System.out.println(invalid_arg_err_long);
-			// 	error_txt = String.format(
-			// 				"%s: invalid option -- '%s'\nTry '%s --help' for more information.",
-			// 				this.programName, arg, this.programName
-			// 				);
-			// 	System.out.println(error_txt);
-			// 	System.exit(0);
-			// }
-			// else if (need_arg_err_value_short || need_arg_err_value_long){
-			// 	error_txt = String.format(
-			// 				"%s: option requires an argument -- '%s'\nTry '%s --help' for more information.",
-			// 				this.programName, arg, this.programName
-			// 				);
-			// 	System.out.println(error_txt);
-			// 	System.exit(0);
-			// }
+			if (invalid_arg_err_long || invalid_arg_err_sort){
+				System.out.println(invalid_arg_err_sort);
+				System.out.println(invalid_arg_err_long);
+				error_txt = String.format(
+							"%s: invalid option -- '%s'\nTry '%s --help' for more information.",
+							this.programName, arg, this.programName
+							);
+				System.out.println(error_txt);
+				System.exit(0);
+			}
+			else if (need_arg_err_value_short || need_arg_err_value_long){
+				error_txt = String.format(
+							"%s: option requires an argument -- '%s'\nTry '%s --help' for more information.",
+							this.programName, arg, this.programName
+							);
+				System.out.println(error_txt);
+				System.exit(0);
+			}
 		}
-		ii = 0;
+		ii = 1;
 		iii = this.positional_arg.size();
 		pc = this.optional_arg_value.size();
+		
 		for (String q: this.args){
 			if (!q.startsWith("-")){
 				ii++;
 			}
 		}
 
-		// if ((ii - pc) < iii){
-		// 	error_txt = String.format(
-		// 				"%s: positional arguments are required\nTry '%s --help' for more information.",
-		// 				this.programName, this.programName
-		// 				);
-		// 	System.out.println(error_txt);
-		// 	System.exit(0);			
-		// }else if (ii - pc > iii) {
-		// 	error_txt = String.format(
-		// 				"%s: invalid positional argument \nTry '%s --help' for more information.",
-		// 				this.programName, this.programName
-		// 				);
-		// 	System.out.println(error_txt);
-		// 	System.exit(0);
-		// }
+		if ((ii - pc) < iii){
+			error_txt = String.format(
+						"%s: positional arguments are required\nTry '%s --help' for more information.",
+						this.programName, this.programName
+						);
+			System.out.println(error_txt);
+			System.exit(0);			
+		}else if (ii - pc > iii) {
+			error_txt = String.format(
+						"%s: invalid positional argument \nTry '%s --help' for more information.",
+						this.programName, this.programName
+						);
+			System.out.println(error_txt);
+			System.exit(0);
+		}
 
 		if (this.args.size() == 0) {
 			error_txt = String.format( 
