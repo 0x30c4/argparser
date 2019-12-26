@@ -190,6 +190,8 @@ public class ArgPars{
 		boolean need_arg_err_value_short = false;
 		boolean need_arg_err_value_long = false;
 		boolean invalid_positional_arg_err = false;
+		boolean l = true;
+
 		char tmp;
 		int ii, iii, error ,pc = 0;
 
@@ -199,6 +201,7 @@ public class ArgPars{
 		}
 
 		for ( int i = 0; i != this.args.size() ; i++ ) {
+			l = true;
 			arg = this.args.get(i);
 			try{	
 			// Finding all the short optional options whether they consist any positional argument or not.
@@ -234,11 +237,11 @@ public class ArgPars{
 									this.optional_arg.put(this.no_val_short_char.get(ii), true);
 									if (invalid_arg_err_sort)
 										invalid_arg_err_sort = false;
+									// System.out.println(this.no_val_short_char.get(ii));
 								}else {
-									invalid_arg_err_sort = true;
-									// System.out.println(c + " " + cc);
-									System.out.println(arg.indexOf(c) + " " + c);
-									// System.out.println(1);
+									if (l)
+										invalid_arg_err_sort = true;
+										// System.out.println(arg.indexOf(c));
 								}
 							}
 							// finding the optonal positional arguments 
@@ -256,6 +259,7 @@ public class ArgPars{
 										if (invalid_arg_err_sort){
 											invalid_arg_err_sort = false;
 										}
+										l = false;
 									}else {
 										iii = arg.indexOf(c) + 1;
 										this.optional_arg_value.
@@ -267,6 +271,7 @@ public class ArgPars{
 										if (invalid_arg_err_sort){
 											invalid_arg_err_sort = false;
 										}
+										l = false;
 									}
 									if (arg.length() - arg.indexOf(c) - 1 == 0 && 
 										!(this.args.size()  > i + 1) && 
