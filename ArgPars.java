@@ -1,4 +1,15 @@
-import java.util.*;
+/**
+* This is a simple command line argument parser.
+* For regular use.
+*
+* @author  Sanaf
+* @version 1.0
+* @since   2019-12-26
+*/
+
+import java.util.List;
+import java.util.Hashtable;
+import java.util.ArrayList;
 
 public class ArgPars{
 	private List<String> opt_pos_short = new ArrayList<>();
@@ -333,6 +344,8 @@ public class ArgPars{
 			//  " "  + need_arg_err_value_short + " " + need_arg_err_value_long +
 			//   " " + need_arg_err_value_short + " " + need_arg_err_value_long);
 
+
+			// checking for any error.
 			if (invalid_arg_err_long || invalid_arg_err_sort){
 				System.out.println(invalid_arg_err_sort);
 				System.out.println(invalid_arg_err_long);
@@ -393,6 +406,7 @@ public class ArgPars{
 		}
 	}
 
+	// This method shows the help menu.
 	public void showHelpMenu(){
 		this.helpMenu = String.format("%s\n%s\n%s\n%s", 
 									   	"Usage: " + programName + " [OPTION]... <ARGUMENTS>...\n",
