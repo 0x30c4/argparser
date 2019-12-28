@@ -5,7 +5,7 @@ public class Example{
 		// The 1st parameter is the "args" that user supply's.
 		// 2nd is the program name.
 		// 3rd is the program description.
-		ArgPars a = new ArgPars(args, "test", "Just for showing the usage.");
+		ArgParser a = new ArgParser(args, "test", "Just for showing the usage.");
 		
 		// Adding the cli options.
 
