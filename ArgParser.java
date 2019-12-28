@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Hashtable;
 import java.util.ArrayList;
 
-public class ArgPars{
+public class ArgParser{
 	private List<String> opt_pos_short = new ArrayList<>();
 	private List<String> opt_pos_short_char = new ArrayList<>();
 	private List<String> opt_pos_long = new ArrayList<>();
@@ -25,9 +25,9 @@ public class ArgPars{
 	
 	public String[] supportedDataTypes = {"str", "int", "float", "double", "boolean"};
 
-	public Hashtable<String, Boolean> optional_arg = new Hashtable<String, Boolean>(); 
-	public Hashtable<String, String> optional_arg_value = new Hashtable<String, String>(); 
-	public Hashtable<String, String> positional_argument = new Hashtable<String, String>(); 
+	public Hashtable<String, Boolean> optionalArg = new Hashtable<String, Boolean>(); 
+	public Hashtable<String, String> optionalArgValue = new Hashtable<String, String>(); 
+	public Hashtable<String, String> positionalArgument = new Hashtable<String, String>(); 
 
 	public String helpMenu;
 	public String programName;
@@ -36,7 +36,7 @@ public class ArgPars{
 	public String helpPositionalArg;
 	public String helpOptionalArg;
 
-	public ArgPars(String[] aa, String programName, String programDescription){
+	public ArgParser(String[] aa, String programName, String programDescription){
 		for (String i: aa) {
 			this.args.add(i);
 		}
@@ -222,11 +222,11 @@ public class ArgPars{
 
 					if (this.checkIfMatch(arg, this.no_val_short)){
 						ii = this.no_val_short.indexOf(arg);
-						this.optional_arg.put(this.no_val_short_char.get(ii), true);
+						this.optionalArg.put(this.no_val_short_char.get(ii), true);
 					}else if (this.checkIfMatch(arg, this.opt_pos_short)) {
 						if (this.args.size() > i + 1 && !this.args.get(i + 1).startsWith("-")) {
 							ii = this.opt_pos_short.indexOf(arg);
-							this.optional_arg_value.put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
+							this.optionalArgValue.put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
 						}else {
 							need_arg_err_value_short = true;
 						}
@@ -237,7 +237,7 @@ public class ArgPars{
 				}else if (arg.startsWith("-") && arg.charAt(1) != '-') {
 					if (this.checkIfMatch(arg.substring(0, 2), this.opt_pos_short)){
 						ii = this.opt_pos_short.indexOf(arg.substring(0, 2));
-						this.optional_arg_value.put(this.opt_pos_long_name.get(ii), arg.substring(2, arg.length()));
+						this.optionalArgValue.put(this.opt_pos_long_name.get(ii), arg.substring(2, arg.length()));
 						if (need_arg_err_value_short)
 							need_arg_err_value_short = false;
 					}else {
@@ -245,7 +245,7 @@ public class ArgPars{
 							for (String cc: this.no_val_short_char) {
 								if (cc.indexOf(c) != -1){
 									ii = this.no_val_short_char.indexOf(cc);
-									this.optional_arg.put(this.no_val_short_char.get(ii), true);
+									this.optionalArg.put(this.no_val_short_char.get(ii), true);
 									if (invalid_arg_err_sort)
 										invalid_arg_err_sort = false;
 								}else {
@@ -260,7 +260,7 @@ public class ArgPars{
 									if (arg.length() - arg.indexOf(c) - 1 == 0 && 
 										this.args.size()  > i + 1 && 
 									 	!this.args.get(i + 1).startsWith("-")){
-										this.optional_arg_value.
+										this.optionalArgValue.
 											put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
 										if (need_arg_err_value_short){
 											need_arg_err_value_short = false;
@@ -271,7 +271,7 @@ public class ArgPars{
 										l = false;
 									}else {
 										iii = arg.indexOf(c) + 1;
-										this.optional_arg_value.
+										this.optionalArgValue.
 											put(this.opt_pos_long_name.get(ii), 
 												arg.substring(iii, arg.length()));
 										if (need_arg_err_value_short){
@@ -298,7 +298,7 @@ public class ArgPars{
 					if (this.checkIfMatch(arg, this.opt_pos_long)){
 						if (this.args.size() > i + 1){
 							ii = this.opt_pos_long.indexOf(arg);
-							this.optional_arg_value.put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
+							this.optionalArgValue.put(this.opt_pos_long_name.get(ii), this.args.get(i + 1));
 							if (invalid_arg_err_long)
 								invalid_arg_err_long = false;
 						}else {
@@ -310,7 +310,7 @@ public class ArgPars{
 								if (arg.charAt(ls.length()) == '=' &&
 								 	arg.substring(0, ls.length()).equals(ls)) {
 									ii = this.opt_pos_long.indexOf(ls);
-									this.optional_arg_value.put(this.opt_pos_long_name.get(ii), 
+									this.optionalArgValue.put(this.opt_pos_long_name.get(ii), 
 										arg.substring(ls.length() + 1, arg.length()));
 									if (invalid_arg_err_long)
 										invalid_arg_err_long = false;
@@ -327,11 +327,11 @@ public class ArgPars{
 				// finding the positional arguments
 					try	{
 						if (this.positional_arg.size() != pc && !this.args.get(i - 1).startsWith("-")){
-							this.positional_argument.put(this.positional_arg.get(pc), arg);
+							this.positionalArgument.put(this.positional_arg.get(pc), arg);
 							pc++;
 						}
 					}catch (IndexOutOfBoundsException e){
-						this.positional_argument.put(this.positional_arg.get(pc), arg);
+						this.positionalArgument.put(this.positional_arg.get(pc), arg);
 						pc++;
 					}
 				}
@@ -367,7 +367,7 @@ public class ArgPars{
 		}
 		ii = 1;
 		iii = this.positional_arg.size();
-		pc = this.optional_arg_value.size();
+		pc = this.optionalArgValue.size();
 		
 		for (String q: this.args){
 			if (!q.startsWith("-")){
@@ -401,7 +401,7 @@ public class ArgPars{
 			System.out.println(error_txt);
 			System.exit(0);
 		}
-		if (this.optional_arg.get("h") != null){
+		if (this.optionalArg.get("h") != null){
 			showHelpMenu();
 		}
 	}
