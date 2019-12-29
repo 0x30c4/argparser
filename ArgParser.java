@@ -45,9 +45,8 @@ public class ArgParser{
 		this.programName =  programName;
 		this.programDescription = programDescription + "\n";
 		this.programUsage = "Usage: " + programName + " [OPTION]... <ARGUMENTS>...\n";
-		this.helpPositionalArg = "positional arguments:\n  ";
 		this.helpOptionalArg = "optional arguments:\n  ";
-		
+		this.helpPositionalArg = "";		
 	}
 
 	/** 
@@ -140,6 +139,8 @@ public class ArgParser{
 		*/
 		if (!this.checkIfNone(value) && this.checkIfNone(long_opt) &&
 			this.checkIfNone(short_opt)){
+			if (positional_arg.size() == 0)
+				this.helpPositionalArg = "positional arguments:\n  ";
 			this.positional_arg.add(value);
 			tmp = 26 - value.length();
 			for (int i = 0; i != tmp; i++) {
