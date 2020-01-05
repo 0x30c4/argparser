@@ -1,6 +1,5 @@
 /**
 * This is a simple command line argument parser.
-* For regular use.
 * 
 * https://github.com/0x30c4/argparser
 *
