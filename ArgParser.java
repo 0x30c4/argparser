@@ -185,7 +185,7 @@ public class ArgParser{
 	}
 
 	/**@param arg It will be checked if it's a long option or not.
-	*@return True if the given option is a long option.False if it's not.
+	*@return True if the given option is a long option.False if it's not. 
 	*/
 	public boolean checkIfLongArg(String arg){
 		if (arg.startsWith("-") && arg.charAt(1) == '-'){
