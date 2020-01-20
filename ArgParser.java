@@ -195,6 +195,10 @@ public class ArgParser{
 		}
 	}
 
+	public void type(){
+
+	}
+
 	//This method parse the argument's that user gave
 	public void parseArg(){
 		this.AddOpt("-h", "NONE", "NONE", "NONE", "To show this text.");
