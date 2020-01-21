@@ -25,7 +25,7 @@ public class ArgParser{
 	private List<String> args = new ArrayList<String>();
 	
 	public String[] supportedDataTypes = {"str", "int", "float", "double", "boolean"};
-
+    
 	public Hashtable<String, Boolean> optionalArg = new Hashtable<String, Boolean>(); 
 	public Hashtable<String, String> optionalArgValue = new Hashtable<String, String>(); 
 	public Hashtable<String, String> positionalArgument = new Hashtable<String, String>(); 
@@ -193,6 +193,10 @@ public class ArgParser{
 		}else{
 			return false;
 		}
+	}
+
+	public void type(){
+
 	}
 
 	//This method parse the argument's that user gave
